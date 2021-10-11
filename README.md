@@ -1,20 +1,22 @@
 # Webpraktyk Vue Slider
-Vue Slider to darmowy komponent do tworzenia slajderów. 
-Komponent jest kompatybilny z **Vue 3**, w pełni responsywny oraz konfigurowalny.
-Zapraszam do sprawdzenia.
+Webpraktyk Vue Slider is a no-dependencies, free Vue component slider and carousel.
+This component is compatible with **Vue 3**, fully responsive and customizable.
 
-## Bez zależności
+Feel free to check it out. 
+
+## No dependencies
 Żeby skorzystać z komponentu wystarczy postawiona aplikacja Vue 3, nic więcej.
+If you want to use it, all you need is the Vue 3 app
 
-## Instalacja
-Zalecanym sposobem na dodanie komponentu do projektu jest pobranie go korzystając w Node Packages Manager.
+## Installation
+NPM is a recommended way. 
 
 ```sh
 npm i webpraktyk-vue-slider
 ```
 
-## Przykładowe użycie
-#### Globalne użycie
+## Sample usage
+#### Global
 ```js
 import Vue from 'vue'
 import App from './App.vue'
@@ -27,7 +29,7 @@ new Vue({
   render: h => h(App)
 })
 ```
-#### W komponencie
+#### In component
 ```html
 <template>
   <div id="app">
@@ -68,55 +70,57 @@ export default {
 }
 </script>
 ```
-## Konfiguracja
-Opcje przekazujemy jako **props** 
+## Configuration props
 
-Więcej informacji:
+More information:
 https://v3.vuejs.org/guide/component-props.html
 
 #### autoplay
 ___
-Włączenie lub wyłączenie automatycznego przełączania slajdów.
+Enable or disable automatic slide switching.
 Type: **Boolean**
 Default: **true**
 
 #### mainClass
 ___
-Dodanie niestandardowej klasy do głównego bloku.
+Adds a custom class to the main block
 Type: **String**
 Required: **false**
 
 #### responsive
 ___
-W przypadku włączenia wymiary są dostosowane do wielkości przeglądarki/urządzenia 
+If enabled, the dimensions are adapted to the size of the browser/device 
 Type: **Boolean**
 Default: **true**
 
 #### slideInterval
 ___
-Okres czasu po jakim ma nastąpić przełączenie slajdu, warość podana w milisekundach.
+Time for switching slides, in milliseconds
 Type: **Number**
 Default: **5000**
 
 #### slideTransitionDuration
 ___
-Czas trwania animacji pomiędzy slajdami, warość podana w milisekundach.
+Duration of the animation between slides, in milliseconds
 Type: **Number**
 Default: **500**
 
 #### slides
 ___
-Informacje o slajdach przekazywana w formie tablicy obiektów. 
-Przykład został podany wyżej.
+Slide data collection. It is a array of objects.
+For example, slide up.
 
 Type: **Array**
-Default: **true**
+Required: **true**
 
-Obiekt może posiadać takie wartości jak:
-**overlay** - type: Boolean - dodanie ciemnego tła aby tekst na slajach był bardziej wyraźny
-**slideName** - type: String - nazwa slajdu, wyświetlana w formie przycisku z możliwością przełączenia
-**background** - type: String - adres URL obrazka
+The object may have values such as:
+
+**overlay** - type: Boolean - additional darkened background
+
+**slideName** - type: String - slide name, displayed as a switchable button
+
+**background** - type: String - address URL background image
 
 
-## Licencja
+## License
 MIT
