@@ -1,7 +1,9 @@
 <template>
   <li class="vue-slider__slide" :class="{'vue-slider__slide--clone': clone }" :style="{ height: slideHeight, backgroundImage: 'url(' + slide.background + ')' }">
     <div :class="{ 'vue-slider__overlay': slide.overlay }">
-      {{ slide.content }}
+      <div class="vue-slider__slide-container">
+        
+      </div>
     </div>
   </li>
 </template>
