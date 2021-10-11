@@ -1,8 +1,8 @@
 {
   "private": false,
   "name": "webpraktyk-vue-slider",
-  "version": "0.0.3",
-  "description": "Photo slider for Vue 3.",
+  "version": "0.0.4",
+  "description": "Webpraktyk Vue Slider is a no-dependencies, free Vue component slider and carousel.",
   "main": "lib/index.js",
   "module": "es/index.js",
   "scripts": {
