@@ -1,23 +1,17 @@
 <template>
   <div v-if="!hasError" class="vue-slider" :class="mainClass" :style="{ width: sliderSize.width + sliderSize.unit }">
     <div class="vue-slider__container">
-      <ul class="vue-slider__slides" :style="{ transform: 'translate3d(' + slidesPosition + sliderSize.unit + ', 0, 0)', transition: 'transform ' + slideTransitionDuration + 'ms ease-in-out' }">
-        <li class="vue-slider__slide vue-slider__slide--clone" :style="{ height: sliderSize.height + sliderSize.unit }">
-          {{ slides[slides.length - 1].content }}
-        </li>
-        <li v-for="(slide, index) in slides" v-bind:key="index" class="vue-slider__slide" :style="{ height: sliderSize.height + sliderSize.unit }">
-          {{ slide.content }}
-        </li>
-        <li class="vue-slider__slide vue-slider__slide--clone" :style="{ height: sliderSize.height + sliderSize.unit }">
-          {{ slides[0].content }}
-        </li>
+      <ul  ref="slidesEl" class="vue-slider__slides" :style="{ transitionDuration: slideTransitionDuration + 'ms' }">
+        <VueSlide :clone="true" :slide="slides[slides.length - 1]" :slideHeight="sliderSize.height + sliderSize.unit" />
+        <VueSlide v-for="(slide, index) in slides" v-bind:key="index" :slide="slide" :slideHeight="sliderSize.height + sliderSize.unit" />
+        <VueSlide :clone="true" :slide="slides[0]" :slideHeight="sliderSize.height + sliderSize.unit" />
       </ul>
       <div class="vue-slider__arrows">
-        <button @click="moveLeft" class="vue-slider__arrow--left">&lt;</button>
-        <button @click="moveRight" class="vue-slider__arrow--right">&gt;</button>
+        <button @click="moveLeft(); resetAutoplay();" class="vue-slider__arrow--left">&lt;</button>
+        <button @click="moveRight(); resetAutoplay();" class="vue-slider__arrow--right">&gt;</button>
       </div>
       <div class="vue-slider__steps">
-        <button v-for="(slide, index) in slides" v-bind:key="index" @click="moveTo(index)">{{ slide.content }}</button>
+        <button v-for="(slide, index) in slides" v-bind:key="index" @click="moveTo(index); resetAutoplay();">{{ slide.content }}</button>
       </div>
     </div>
     <span v-if="autoplay">Autoplay włączony</span>
@@ -26,10 +20,14 @@
 </template>
 
 <script>
-  import { ref, onMounted } from 'vue'
+  import { ref, onMounted } from 'vue';
+  import VueSlide from './components/VueSlide.vue';
 
   export default {
     name: 'VueSlider',
+    components: {
+      VueSlide
+    },
     props: {
       autoplay: {
         type: Boolean,
@@ -45,36 +43,46 @@
       },
       slideInterval: {
         type: Number,
-        default: 3000
+        default: 5000
       },
       slideTransitionDuration: {
         type: Number,
-        default: 3000
+        default: 500
       },
       slides: {
         type: Array,
         default: function () {
           return [
-            { content: 1 },
-            { content: 2 },
-            { content: 3 },
+            { 
+              overlay: true, 
+              content: 1, 
+              background: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1171&q=80'
+            },
+            { 
+              overlay: true, 
+              content: 2, 
+              background: 'https://images.unsplash.com/photo-1583244685026-d8519b5e3d21?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80' 
+            },
+            { 
+              overlay: true, 
+              content: 3, 
+              background: 'https://images.unsplash.com/photo-1532901945832-bdf4f9e008fa?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80' 
+            },
           ]
         }
-      },
-      switchSpeed: {
-
       }
     },
     setup (props) {
       const hasError = ref(false);
       const activeSlide = ref(0);
       const autoplayInterval = ref(null);
-      const slidesPosition = ref('');
       const sliderSize = ref({
         width: 0,
         height: 0,
         unit: 'px'
       });
+      const slidesEl = ref(null);
+      const slidesPosition = ref('');
 
       onMounted(() => {
         init();
@@ -92,13 +100,23 @@
           // przypisz podane wymiary
         }
         
-        moveTo(0);
+        moveTo(0, true);
+        startAutoplay();
+      }
 
+      const startAutoplay = function () {
         if (props.autoplay) {
           autoplayInterval.value = setInterval(() => {
             moveRight();
-          }, props.slideInterval)
+          }, props.slideInterval);
         }
+      }
+
+      const resetAutoplay = function () {
+        if (props.autoplay && autoplayInterval.value !== null) {
+          clearInterval(autoplayInterval.value);
+        }
+        startAutoplay();
       }
 
       const getScreenSize = function() {
@@ -112,6 +130,7 @@
       const moveLeft = function() {
         activeSlide.value -= 1;
         slidesPosition.value = -(activeSlide.value + 1) * sliderSize.value.width;
+        slidesEl.value.style.transform = 'translate3d(' + slidesPosition.value + sliderSize.value.unit + ', 0, 0)';
 
         // check if active slide is a clone slide
         if (activeSlide.value === -1) {
@@ -122,36 +141,51 @@
       const moveRight = function() {
         activeSlide.value += 1;
         slidesPosition.value = -(activeSlide.value + 1) * sliderSize.value.width;
+        slidesEl.value.style.transform = 'translate3d(' + slidesPosition.value + sliderSize.value.unit + ', 0, 0)';
 
         // check if active slide is a clone slide
         if (activeSlide.value === props.slides.length) {
-          moveTo(0);
+          setTimeout(() => {
+            moveTo(0, true);
+          }, props.slideTransitionDuration);
         }
       }
 
-      const moveTo = function(slideIndex) {
+      const moveTo = function(slideIndex, noTransition = false) {
         if (typeof(slideIndex) !== 'number') {
           console.error('SlideIndex must be a number.')
         }
 
+        if (noTransition) {
+          slidesEl.value.classList.add('vue-slider__slides--no-transition');
+        }
+
         activeSlide.value = slideIndex;
         slidesPosition.value = -(slideIndex + 1) * sliderSize.value.width;
+        slidesEl.value.style.transform = 'translate3d(' + slidesPosition.value + sliderSize.value.unit + ', 0, 0)';
+
+        if (noTransition) {
+          slidesEl.value.offsetHeight;
+          slidesEl.value.classList.remove('vue-slider__slides--no-transition');
+        }
       }
 
       return {
         hasError,
         activeSlide,
         sliderSize,
+        slidesEl,
         slidesPosition,
         moveLeft,
         moveRight,
         moveTo,
+        resetAutoplay,
       }
     }
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .vue-slider__container {
     box-sizing: border-box;
     position: relative;
@@ -165,13 +199,28 @@
       flex-wrap: nowrap;
       flex-shrink: 0;
       transform: translate3d(0, 0, 0);
-      transition: transform 0ms ease-in-out;
+      transition-property: transform;
+      transition-duration: 500ms;
+      transition-timing-function: ease-in-out;
+      transition-delay: 0s;
+      &.vue-slider__slides--no-transition {
+          transition-property: none;
+          transition-duration: 0ms;
+          transition-timing-function: unset;
+      }
       > li.vue-slider__slide {
+        position: relative;
         display: block;
         min-width: 100%;
-        background-color: pink;
-        &:nth-of-type(even) {
-          background-color: yellow;
+        background-size: cover;
+        background-position: center center;
+        .vue-slider__overlay {
+          background: radial-gradient(circle,rgba(63,94,251,0) 0,rgba(0,0,0,.925) 100%);
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
         }
       }
     }
