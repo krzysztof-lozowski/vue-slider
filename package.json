@@ -17,11 +17,7 @@
     "url": "git+https://github.com/krzysztof-lozowski/vue-slider.git"
   },
   "keywords": [
-    "vue",
-    "slider",
-    "photos",
-    "animation",
-    "full-screen"
+    "vue3", "slider", "carousel", "photos", "animation", "full-screen", "responsive", "vue-component", "no-dependencies"
   ],
   "author": "Krzysztof Łozowski",
   "license": "MIT",
