@@ -89,7 +89,20 @@ Required: **false**
 
 #### responsive
 ___
-If enabled, the dimensions are adapted to the size of the browser/device 
+If true, the dimensions are adapted to the size of the browser/device.
+If false, you must declare sliderHeight and sliderWidth 
+Type: **Boolean**
+Default: **true**
+
+#### showArrowButtons
+___
+Show arrow controls.
+Type: **Boolean**
+Default: **true**
+
+#### showSlideButtons
+___
+Show slide buttons.
 Type: **Boolean**
 Default: **true**
 
@@ -105,6 +118,20 @@ Duration of the animation between slides, in milliseconds
 Type: **Number**
 Default: **500**
 
+#### sliderHeight
+___
+Height of slider. Acceptable units px, em, rem, %, vw, vh
+**Used when responsive props is false.**
+Type: **String**
+Required: **false**
+
+#### sliderWidth
+___
+Width of slider. Acceptable units px, em, rem, %, vw, vh
+**Used when responsive props is false.**
+Type: **String**
+Required: **false**
+
 #### slides
 ___
 Slide data collection. It is a array of objects.
@@ -117,7 +144,7 @@ The object may have values such as:
 
 **overlay** - type: Boolean - additional darkened background
 
-**slideName** - type: String - slide name, displayed as a switchable button
+**buttonName** - type: String - slide name, displayed as a switchable button
 
 **background** - type: String - address URL background image
 
