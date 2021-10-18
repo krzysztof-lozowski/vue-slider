@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "webpraktyk-vue-slider",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Webpraktyk Vue Slider is a no-dependencies, free Vue component slider and carousel.",
   "main": "lib/index.js",
   "module": "es/index.js",
